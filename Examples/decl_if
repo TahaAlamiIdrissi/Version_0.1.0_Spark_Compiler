@@ -1,8 +1,5 @@
 procedure Hello is
-x, y, z : float := 5+5/9;
-a : integer := 5;
+a : integer;
 begin
-    if x=4 
-    then x:=5;
-    end if;
+    a := 5;
 end Hello;

@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 #define Malloc(type) (type *) malloc((strlen(type) + 1) * sizeof(type));
-#define debug false
+#define debug true
 
 typetoken token;
 
@@ -98,6 +98,7 @@ boolean _prog(){
                                 result = false ;
                             }
                         }else{
+                            creer_sx_erreur(STATEMENTEXPECTED, tokenattribute.line);
                             result = false ;
                         }
                     }else{
@@ -673,6 +674,7 @@ boolean _loop_statement(){
         }
     }
     else{
+        creer_sx_erreur(LOOPEXPECTED, tokenattribute.line);
         result = false ;
     }
     if (debug) printf("out of loop_statement()\n");
@@ -1087,6 +1089,7 @@ boolean _case_body(){
                 result = false;
             }
         }else{
+            creer_sx_erreur(VALUEEXPECTED, tokenattribute.line);
             result = false;
         }
     }else{
@@ -1561,7 +1564,7 @@ boolean _inst(){
     }else{
         result = false;
     }
-    if (debug) printf("out of list_inst_aux()\n");
+    if (debug) printf("out of inst()\n");
     return result;
 }
 /* PUT_STATEMENT : 'put' '(' VALUE ')' ';' 
@@ -1590,6 +1593,7 @@ boolean _put_statement() {
                     result = false;
                 }
             }else {
+                creer_sx_erreur(VALUEEXPECTED, tokenattribute.line);
                 result = false;
             }
         }else{
@@ -1607,15 +1611,19 @@ boolean _put_statement() {
                     if( token == SEMI_COLON){
                         result = true;
                     }else{
+                        creer_sx_erreur(SEMICOLONEXPECTED, tokenattribute.line);
                         result = false;
                     }
                 }else{
+                    creer_sx_erreur(PCLOSEEXPECTED, tokenattribute.line);
                     result = false;
                 }
             }else {
+                creer_sx_erreur(VALUEEXPECTED, tokenattribute.line);
                 result = false;
             }
         }else{
+            creer_sx_erreur(POPENEXPECTED, tokenattribute.line);
             result = false;
         }
     }else{
@@ -1690,10 +1698,10 @@ boolean _assignment(){
             }
             result = true;
         }else{
+            creer_sx_erreur(VALUEEXPECTED, tokenattribute.line);
             result = false;
         }
     }else{
-        creer_sx_erreur(AFFECTATIONEXPECTED, tokenattribute.line);
         result = false;
     }
     if (debug) printf("out of assignment()\n");
