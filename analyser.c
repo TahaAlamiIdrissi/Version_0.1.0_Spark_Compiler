@@ -3,7 +3,7 @@
 #include <string.h>
 #include "tab_symb.h"
 //#include "cfg.h"
-//#include "error.h"
+#include "error.h"
 //#include "pseudocode.h"
 //#include "vm.h"
 //#include "i18n.h"

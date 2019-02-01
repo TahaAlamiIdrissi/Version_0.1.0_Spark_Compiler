@@ -40,8 +40,8 @@ i18n : i18n.h i18n.c
 analyser : cfg.h error.h analyser.h pseudocode.h vm.h tab_symb.h i18n.h analyser.c
 	gcc -c analyser.c
 
-analyserout :  lex cfg error tab_Symb analyser ast 
-	gcc -o sparkc cfg.o ast.o tab_symb.o lex.yy.o analyser.o
+analyserout :  lex cfg error tab_Symb analyser ast error
+	gcc -o sparkc error.o cfg.o ast.o tab_symb.o lex.yy.o analyser.o
 
 all : analyserout interpreteurout
 
