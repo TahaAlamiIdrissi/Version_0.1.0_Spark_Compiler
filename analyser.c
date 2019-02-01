@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 #define Malloc(type) (type *) malloc((strlen(type) + 1) * sizeof(type));
-#define debug true
+#define debug false
 
 typetoken token;
 
@@ -486,8 +486,7 @@ boolean _for_loop(){
                 creer_sx_erreur(INEXPECTED, tokenattribute.line);
                 result = false ;
             }
-        }
-        else{
+        }else{
             creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
             result = false ;
         }
@@ -1562,9 +1561,6 @@ boolean _inst(){
     }else{
         result = false;
     }
-    else{
-        result = false ;
-    }
     if (debug) printf("out of list_inst_aux()\n");
     return result;
 }
@@ -1675,7 +1671,6 @@ boolean _assignment_statement(){
             result = false;
         }
     }else {
-        creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
         result = false;
     }
     if (debug) printf("out of assignment_statement()\n");
@@ -1781,7 +1776,6 @@ boolean _if_statement(){
             result = false;
         }
     }else{
-        creer_sx_erreur(IFEXPECTED, tokenattribute.line);
         result = false;
     }
     if (debug) printf("out of if_statement()\n");
@@ -1824,7 +1818,7 @@ boolean _else_statement(){
                     result = false;
                 }
             }else{
-                creer_sx_erreur(THEXPECTED, tokenattribute.line);
+                creer_sx_erreur(THENEXPECTED, tokenattribute.line);
                 result = false;
             }
         }else{

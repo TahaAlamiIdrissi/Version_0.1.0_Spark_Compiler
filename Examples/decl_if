@@ -2,6 +2,7 @@ procedure Hello is
 x, y, z : float := 5+5/9;
 a : integer := 5;
 begin
-    if x=4 or (x=3 xor x=5 )
-    then 
+    if x=4 
+    then x:=5;
+    end if;
 end Hello;
