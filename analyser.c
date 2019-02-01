@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 #define Malloc(type) (type *) malloc((strlen(type) + 1) * sizeof(type));
-#define debug false
+#define debug true
 
 typetoken token;
 
@@ -365,8 +365,6 @@ boolean _list_decl(){
 	}else {
 		result = false ;
 	}
-    
-    afficherTS();
     
     if (debug) printf("out of list_decl()\n");
 	return result ;
@@ -1567,6 +1565,8 @@ boolean _inst(){
         result = true;
     }else if (_put_statement()) {
         result = true;
+    }else{
+        result = false;
     }
     if (debug) printf("out of list_inst_aux()\n");
 	return result;

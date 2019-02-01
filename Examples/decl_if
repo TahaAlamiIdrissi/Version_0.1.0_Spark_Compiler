@@ -2,5 +2,6 @@ procedure Hello is
 x, y, z : float := 5+5/9;
 a : integer := 5;
 begin
-    put("hello");
+    if x=4 or (x=3 xor x=5 )
+    then 
 end Hello;
