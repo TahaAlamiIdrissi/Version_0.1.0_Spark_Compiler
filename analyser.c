@@ -3,7 +3,7 @@
 #include <string.h>
 #include "tab_symb.h"
 //#include "cfg.h"
-//#include "error.h"
+#include "error.h"
 //#include "pseudocode.h"
 //#include "vm.h"
 //#include "i18n.h"
@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 			afficher_sm_erreurs();
         }
     } else {
-        if (nombre_sx_erreurs() == 0) creer_sx_erreur(NonCategorized, tokenattribute.line);
+        if (nombre_sx_erreurs() == 0) creer_sx_erreur(NONCATEGORIZED, tokenattribute.line);
         afficher_erreurs();
         if (debug) afficherTS();
     }
