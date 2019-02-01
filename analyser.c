@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 			afficher_sm_erreurs();
         }
     } else {
-        if (nombre_sx_erreurs() == 0) creer_sx_erreur(NonCategorized, tokenattribute.line);
+        if (nombre_sx_erreurs() == 0) creer_sx_erreur(NONCATEGORIZED, tokenattribute.line);
         afficher_erreurs();
         if (debug) afficherTS();
     }
@@ -188,6 +188,7 @@ boolean _decl(){
 			result = false ;
 		}
 	}else{
+        creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
 		result = false ;
 	}
 
@@ -264,6 +265,7 @@ boolean _list_idf(){
 				result = false ;
 			}
 		}else{
+            creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
 			result = false ;
 		}
 	}
@@ -386,14 +388,17 @@ boolean _loop() {
                     result = true;
                 }
                 else{
+                    creer_sx_erreur(SEMICOLONEXPECTED, tokenattribute.line);
                     result = false;
                 }
             }
             else{
+                creer_sx_erreur(LOOPEXPECTED, tokenattribute.line);
                 result = false;
             }
         }
         else{
+            creer_sx_erreur(ENDEXPECTED, tokenattribute.line);
             result = false;
         }
     }
@@ -444,10 +449,12 @@ boolean _while_loop(){
             }
         }
         else{
+            creer_sx_erreur(CONDITIONEXPECTED, tokenattribute.line);
             result = false ;
         }
     }
     else{
+        creer_sx_erreur(WHILEEXPECTED, tokenattribute.line);
         result = false ;
     }
     if (debug) printf("out of while_loop()\n");
@@ -475,18 +482,22 @@ boolean _for_loop(){
                     }
                 }
                 else{
+                    creer_sx_erreur(INDEXTYPEEXPECTED, tokenattribute.line);
                     result = false ;
                 }
             }
             else{
+                creer_sx_erreur(INEXPECTED, tokenattribute.line);
                 result = false ;
             }
         }
         else{
+            creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
             result = false ;
         }
     }
     else{
+        creer_sx_erreur(FOREXPECTED, tokenattribute.line);
         result = false ;
     }
     if (debug) printf("out of for_loop()\n");
@@ -581,6 +592,7 @@ boolean _other_loop(){
 	        result = false ;
 	    }
     }else{
+        creer_sx_erreur(LOOPEXPECTED, tokenattribute.line);
     	result = false ;
     }
     if (debug) printf("out of other_loop()\n");
@@ -612,12 +624,15 @@ boolean _loop_condition(){
                     	result = false ;
                     }
                 }else {
+                    creer_sx_erreur(SEMICOLONEXPECTED, tokenattribute.line);
                     result = false ;
                 }
             }else {
+                creer_sx_erreur(CONDITIONEXPECTED, tokenattribute.line);
                 result = false ;
             }
         }else {
+            creer_sx_erreur(WHENEXPECTED, tokenattribute.line);
             result = false ;
         }
     }
@@ -665,6 +680,7 @@ boolean _loop_statement(){
         }
     }
     else{
+        creer_sx_erreur(LOOPEXPECTED, tokenattribute.line);
         result = false ;
     }
     if (debug) printf("out of loop_statement()\n");
@@ -977,7 +993,8 @@ boolean _aux(AST *past){
 				//creer_sx_erreur(PcloseExpected, tokenattribute.line);
 			}
 		}else result = false;
-	} else  {result = false; /*creer_sx_erreur(IdforinumberordnumberorpopenExpected, tokenattribute.line);*/}
+	} else  {result = false;
+    creer_sx_erreur(VALUEEXPECTED, tokenattribute.line);}
 
 
 	if (debug) printf("out of aux()\n");
@@ -1001,6 +1018,7 @@ boolean _case_statement(){
                     if(token == WHEN_OTHERS){
                         token = _read_token();
                         if(token == ARROW){
+                            token = _read_token();
                             if(_list_inst()){
                                 token = _read_token();
                                 if(token == END){
@@ -1008,31 +1026,38 @@ boolean _case_statement(){
                                     if(token == CASE){
                                         result = true;
                                     }else{
+                                        creer_sx_erreur(CASEEXPECTED, tokenattribute.line);
                                         result = false;
                                     }
                                 }else{
+                                    creer_sx_erreur(ENDEXPECTED, tokenattribute.line);
                                     result = false;
                                 }
                             }else{
                                 result = false;
                             }
                         }else{
+                            creer_sx_erreur(ARROWEXPECTED, tokenattribute.line);
                             result = false;
                         }
                         
                     }else{
+                        creer_sx_erreur(WHENOTHERSEXPECTED, tokenattribute.line);
                         result = false;
                     }
                 }else{
                     result = false;
                 }
             }else{
+                creer_sx_erreur(ISEXPECTED, tokenattribute.line);
                 result = false;
             }
         }else{
+            creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
             result = false;
         }
     }else{
+        creer_sx_erreur(CASEEXPECTED, tokenattribute.line);
         result = false;
     }
 
@@ -1067,6 +1092,7 @@ boolean _case_body(){
                     result = false;
                 }
             }else{
+                creer_sx_erreur(ARROWEXPECTED, tokenattribute.line);
                 result = false;
             }
         }else{
@@ -1563,15 +1589,18 @@ boolean _put_statement() {
                     if( token == SEMI_COLON){
                         result = true;
                     }else{
+                        creer_sx_erreur(SEMICOLONEXPECTED, tokenattribute.line);
                         result = false;
                     }
                 }else{
+                    creer_sx_erreur(PCLOSEEXPECTED, tokenattribute.line);
                     result = false;
                 }
             }else {
                 result = false;
             }
         }else{
+            creer_sx_erreur(POPENEXPECTED, tokenattribute.line);
             result = false;
         }
     }else if( token == PUT_LINE ){
@@ -1649,6 +1678,7 @@ boolean _assignment_statement(){
             result = false;
         }
     }else {
+        creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
         result = false;
     }
     if (debug) printf("out of assignment_statement()\n");
@@ -1671,6 +1701,7 @@ boolean _assignment(){
             result = false;
         }
     }else{
+        creer_sx_erreur(AFFECTATIONEXPECTED, tokenattribute.line);
         result = false;
     }
     if (debug) printf("out of assignment()\n");
@@ -1727,12 +1758,15 @@ boolean _if_statement(){
                                 if( token == SEMI_COLON){
                                     result = true;
                                 }else{
+                                    creer_sx_erreur(SEMICOLONEXPECTED, tokenattribute.line);
                                     result = false;
                                 }
                             }else{
+                                creer_sx_erreur(IFEXPECTED, tokenattribute.line);
                                 result = false;
                             }
                         }else{
+                            creer_sx_erreur(ENDEXPECTED, tokenattribute.line);
                             result = false;
                         }
                     }else{
@@ -1742,12 +1776,15 @@ boolean _if_statement(){
                     result = false;
                 }
             }else{
+                creer_sx_erreur(THENEXPECTED, tokenattribute.line);
                 result = false;
             }
         }else{
+            creer_sx_erreur(CONDITIONEXPECTED, tokenattribute.line);
             result = false;
         }
     }else{
+        creer_sx_erreur(IFEXPECTED, tokenattribute.line);
         result = false;
     }
     if (debug) printf("out of if_statement()\n");
@@ -1790,9 +1827,11 @@ boolean _else_statement(){
                     result = false;
                 }
             }else{
+                creer_sx_erreur(THENEXPECTED, tokenattribute.line);
                 result = false;
             }
         }else{
+            creer_sx_erreur(CONDITIONEXPECTED, tokenattribute.line);
             result = false;
         }
     }else{
