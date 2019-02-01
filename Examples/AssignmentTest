@@ -1,0 +1,4 @@
+id := 1 ;
+
+flex -i analyser.l; gcc -c lex.yy.c; gcc -c tab_symb.c; gcc -c ast.c; gcc -c cfg.c; gcc -c analyser.c;
+gcc -o sparkc ast.o tab_symb.o lex.yy.o analyser.o ast.o cfg.o -lfl

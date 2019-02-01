@@ -1,0 +1,19 @@
+--test each loop and turn the others to comments
+
+while test loop test end loop while_loop ;
+
+--for_loop:for i in integer range 1 .. 10 loop test end loop for_loop ;
+
+--for_loop_on_array: for i in IX'range loop test end loop for_loop_on_array ;
+
+--endless_loop: loop test end loop endless_loop;
+
+--LOOP_WITH_CONDITION_AT_THE_END: loop test exit LOOP_WITH_CONDITION_AT_THE_END when test ; end loop LOOP_WITH_CONDITION_AT_THE_END ;
+
+--LOOP_WITH_CONDITION_AT_THE_MIDDLE:loop test exit LOOP_WITH_CONDITION_AT_THE_MIDDLE when test ;test end loop LOOP_WITH_CONDITION_AT_THE_MIDDLE ;
+
+
+
+
+
+

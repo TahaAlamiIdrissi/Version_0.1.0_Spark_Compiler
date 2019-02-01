@@ -1,0 +1,6 @@
+procedure Hello is
+x, y, z : float := 5+5/9;
+a : integer := 5;
+begin
+    put("hello");
+end Hello;

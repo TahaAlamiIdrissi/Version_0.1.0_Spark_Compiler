@@ -1,0 +1,9 @@
+des fonctions créées par le programeur
+des fonctions importées d'un package
+
+pour le print on ne peut faire que print(idf) ou print(string)
+pour les conditions on n'a que x==... on peut ajouter true false ou meme le retour d'une fonction
+les boucle for et while peuvent contenir exit
+les boucle en générale on peuvent avoir un libelle
+
+

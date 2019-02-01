@@ -1,0 +1,153 @@
+PROG : procedure idf is LIST_DECL beg LIST_INST end idf ;
+
+
+**************************DECLARATION***************************
+
+
+DECL : idf LIST_IDF : MODIFIER TYPE ADD_ASSIGNMENT ;
+
+MODIFIER : constant | epsilon
+// Follows (character|string|integer|float|boolean)
+// First (constant)
+
+LIST_IDF : , idf LIST_IDF | epsilon
+// Follows (':')
+// first (',')
+
+ADD_ASSIGNMENT : ASSIGNMENT | epsilon
+// Follows (';')
+// First (':=')
+
+--------------------------TYPE-----------------------------
+TYPE : character | String | float | integer | boolean | natural | positive
+----------------------------------------------------------------
+
+****************************************************************
+
+**************************LIST DECLARATION***************************
+LIST_DECL : DECL LIST_DECL | epsilon
+// Follows ('beg')
+// First ('idf')
+
+**********************LIST_INST*********************
+
+
+LIST_INST : INST LIST_INST_AUX
+LIST_INST_AUX : LIST_INST | epsilon
+FOLLOWS ('end')
+// First (while, for, loop, if, case, idf, put, put_line)
+
+INST : LOOP | IF_STATEMENT | CASE_STATEMENT | ASSIGNMENT_STATEMENT | PUT_STATEMENT
+// First (while, for, loop, if, case, idf, put, put_line)
+
+PUT_STATEMENT : 'put' '(' VALUE ')' ';' | 'put_line' '(' VALUE ')' ';'
+
+VALUE : inumber | fnumber | char | str | true | false | idf
+
+----------------------ASSIGNEMENT_STATEMENT---------------------
+
+ASSIGNMENT_STATEMENT : idf ASSIGNMENT ;
+
+ASSIGNMENT : ':=' EXPRESSION
+
+EXPRESSION : char | str | true | false | ADDSUB 
+
+
+----------------------------------------------------------------
+
+-----------------------------LOOP-------------------------------
+LOOP: LOOP_TYPE 'end' 'loop' ';'
+// First (while, for, loop)
+
+LOOP_TYPE: WHILE_LOOP | FOR_LOOP | OTHER_LOOP
+
+WHILE_LOOP: 'while' GLOBAL_COND LOOP_STATEMENT
+// First (while)
+
+FOR_LOOP: 'for' idf in INDEX_TYPE LOOP_STATEMENT
+// First(for)
+
+INDEX_TYPE: integer range inumber .. inumber | inumber .. inumber | idf ' range
+
+OTHER_LOOP: 'loop' EXTRA_STATEMENT LOOP_CONDITION
+// First('loop')
+
+LOOP_CONDITION :  exit when GLOBAL_COND ';' EXTRA_STATEMENT | epsilon
+//Follows (end)
+//First (exit)
+
+EXTRA_STATEMENT: LIST_INST | epsilon
+// Follows (end, exit)
+// First (while, for, loop, if, case, idf, put, put_line)
+	
+LOOP_STATEMENT: loop LIST_INST
+
+-----------------------------------------------------------------
+
+--------------------------IF_STATEMENT---------------------------
+IF_STATEMENT : if GLOBAL_COND then LIST_INST ELSE_STATEMENT end if ;
+// First (if)
+
+ELSE_STATEMENT : else LIST_INST | elsif GLOBAL_COND then LIST_INST ELSE_STATEMENT | epsilon
+// Follows (end)
+// First (else,elsif)
+
+CONDITION_BOOL : true | false 
+CONDITION_ARITH : VALUE OPERATOR_ARITH VALUE 
+OPERATOR_ARITH : '=' | '/=' | '<' | '>' | '<=' | '>='
+
+COND : CONDITION_BOOL | CONDITION_ARITH
+LIST_COND : COND LIST_COND_AUX
+
+LIST_COND_AUX : OR_LIST_COND_AUX | AND_LIST_COND_AUX | XOR_LIST_COND_AUX
+
+OR_LIST_COND_AUX : 'or' COND OR_LIST_COND_AUX | epsilon
+// Follows ( ')', then, 'loop', ';' )
+
+AND_LIST_COND_AUX : 'and' COND AND_LIST_COND_AUX | epsilon
+// Follows ( ')', then, 'loop', ';' )
+
+XOR_LIST_COND_AUX : 'xor' COND XOR_LIST_COND_AUX | epsilon
+// Follows ( ')', then, 'loop', ';' )
+
+GLOBAL_COND : '(' LIST_COND ')' GLOBAL_COND_AUX | LIST_COND
+GLOBAL_COND_AUX : OR_GLOBAL_COND_AUX | AND_GLOBAL_COND_AUX | XOR_GLOBAL_COND_AUX
+
+OR_GLOBAL_COND_AUX : 'or' '(' LIST_COND ')' OR_GLOBAL_COND_AUX | epsilon
+// Follows (then, 'loop', ';')
+
+AND_GLOBAL_COND_AUX : 'and' '(' LIST_COND ')' AND_GLOBAL_COND_AUX | epsilon
+// Follows (then, 'loop', ';')
+
+XOR_GLOBAL_COND_AUX : 'xor' '(' LIST_COND ')' XOR_GLOBAL_COND_AUX | epsilon
+// Follows (then, 'loop', ';')
+
+-----------------------------------------------------------------
+
+-------------------------CASE_STATEMENT--------------------------
+CASE_STATEMENT : case idf is CASE_BODY 'when_others' '=>' LIST_INST end case ;
+// First (case)
+CASE_BODY :  when VALUE '=>' LIST_INST CASE_BODY | epsilon
+// Follows ('when_others')
+
+-----------------------------------------------------------------
+
+------------------------OPERATION--------------------------
+ADDSUB : MULTDIV ADDSUBAUX
+
+ADDSUBAUX : – MULTDIV ADDSUBAUX | + MULTDIV ADDSUBAUX | epsilon
+// Follows(')', then, 'loop', ';')
+// First(ADDSUBAUX) = { '-' , '+' }
+
+MULTDIV : AUX MULTDIVAUX
+
+MULTDIVAUX : * AUX MULTDIVAUX | / AUX MULTDIVAUX | epsilon
+// Follows('-', '+', ')', then, 'loop', ';')
+// First(MULTDIVAUX) = { '*', '/' }
+
+AUX : idf | inumber | fnumber | ( ADDSUB )
+
+-----------------------------------------------------------------
+
+
+*****************************************************************

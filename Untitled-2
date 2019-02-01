@@ -1,0 +1,2 @@
+
+flex -i analyser.l; gcc -c lex.yy.c; gcc -c analyser.c; gcc -o zzc lex.yy.o analyser.o -lfl; ./zzc
