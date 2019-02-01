@@ -3,7 +3,7 @@
 #include <string.h>
 #include "tab_symb.h"
 //#include "cfg.h"
-#include "error.h"
+//#include "error.h"
 //#include "pseudocode.h"
 //#include "vm.h"
 //#include "i18n.h"
@@ -35,16 +35,16 @@ int main(int argc, char **argv) {
         printf("0 syntactic errors\n");
         if (nombre_sm_erreurs() == 0){
             if (debug) {if (semanticerror == true)  printf("BUGG 0 semantic error BUT semanticerror == true !!\n");}
-			if (debug) printf("0 erreurs sémantiques\n");
-			if (debug) afficherTS();
+            if (debug) printf("0 erreurs sémantiques\n");
+            if (debug) afficherTS();
         }
         else{
-			if (debug) afficherTS();
-			//printf("%d erreurs sémantiques\n", nombre_sm_erreurs());
-			afficher_sm_erreurs();
+            if (debug) afficherTS();
+            //printf("%d erreurs sémantiques\n", nombre_sm_erreurs());
+            afficher_sm_erreurs();
         }
     } else {
-        if (nombre_sx_erreurs() == 0) creer_sx_erreur(NONCATEGORIZED, tokenattribute.line);
+        if (nombre_sx_erreurs() == 0) creer_sx_erreur(NonCategorized, tokenattribute.line);
         afficher_erreurs();
         if (debug) afficherTS();
     }
@@ -64,86 +64,86 @@ typetoken _read_token() {
 
 //PROG : procedure idf is LIST_DECL beg LIST_INST end idf ;
 boolean _prog(){
-	boolean result = false;
+    boolean result = false;
     if (debug) printf("prog()\n");
 
-	if (token == PROCEDURE){
-		token = _read_token();
-		if (token == IDF){
-			token = _read_token();
-			if (token == IS){
-				token = _read_token();
-				if (_list_decl()){
-					token = _read_token();
-					if (token == BEG){
-						token = _read_token();
-						if (_list_inst()){
-							token = _read_token();
-							if (token == END){
-								token = _read_token();
-								if (token == IDF){
-									token = _read_token();
-									if (token == SEMI_COLON){
-										result = true;
-									}else{
+    if (token == PROCEDURE){
+        token = _read_token();
+        if (token == IDF){
+            token = _read_token();
+            if (token == IS){
+                token = _read_token();
+                if (_list_decl()){
+                    token = _read_token();
+                    if (token == BEG){
+                        token = _read_token();
+                        if (_list_inst()){
+                            token = _read_token();
+                            if (token == END){
+                                token = _read_token();
+                                if (token == IDF){
+                                    token = _read_token();
+                                    if (token == SEMI_COLON){
+                                        result = true;
+                                    }else{
                                         creer_sx_erreur(SEMICOLONEXPECTED, tokenattribute.line);
-										result = false ;
-									}
-								}else{
+                                        result = false ;
+                                    }
+                                }else{
                                     creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
-									result = false ;
-								}
-							}else{
+                                    result = false ;
+                                }
+                            }else{
                                 creer_sx_erreur(ENDEXPECTED, tokenattribute.line);
-								result = false ;
-							}
-						}else{
-							result = false ;
-						}
-					}else{
+                                result = false ;
+                            }
+                        }else{
+                            result = false ;
+                        }
+                    }else{
                         creer_sx_erreur(BEGINEXPECTED, tokenattribute.line);
-						result = false ;
-					}
-				}else{
-					result = false ;
-				}
-			}else{
+                        result = false ;
+                    }
+                }else{
+                    result = false ;
+                }
+            }else{
                 creer_sx_erreur(ISEXPECTED, tokenattribute.line);
-				result = false ;
-			}
-		}else{
+                result = false ;
+            }
+        }else{
             creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
-			result = false ;
-		}
-	}else{
+            result = false ;
+        }
+    }else{
         creer_sx_erreur(PROCEDUREEXPECTED, tokenattribute.line);
-		result = false ;
-	}
+        result = false ;
+    }
 
     if (debug) printf("out of prog()\n");
-	return result ;
+    return result ;
 }
 
 
 //DECL : idf LIST_IDF : MODIFIER TYPE ADD_ASSIGNMENT ;
 boolean _decl(){
-	boolean result = false;
+    boolean result = false;
     if (debug) printf("decl()\n");
 
-	if (token == IDF){
+    if (token == IDF){
         if (debug) printf("VAR{%s}",varattribute[NBRMAXIDF].name);
-		token = _read_token();
-		if (_list_idf()){
-			token = _read_token();
-			if (token == COLON){
-				token = _read_token();
-				if (_modifier()){
-					token = _read_token();
-					if (_type()){
-						token = _read_token();
-						if (_add_assignment()){
-							token = _read_token();
-							if (token == SEMI_COLON){
+        token = _read_token();
+        if (_list_idf()){
+            token = _read_token();
+            if (token == COLON){
+                token = _read_token();
+                if (_modifier()){
+                    token = _read_token();
+                    if (_type()){
+                        token = _read_token();
+                        if (_add_assignment()){
+                            token = _read_token();
+                            if (token == SEMI_COLON){
                                 for(int i = 0; i<NBRMAXIDF; i++){
                                     if(inListIdf(varattribute[i].name) || inTS(varattribute[i].name, &rangvar)){
                                         //erreur sem deja declarée
@@ -165,35 +165,34 @@ boolean _decl(){
                                     }
                                     //verification de sm error de badlydeclared
                                 }
-								result = true ;
-							}else{
+                                result = true ;
+                            }else{
                                 creer_sx_erreur(SEMICOLONEXPECTED, tokenattribute.line);
-								result = false ;
-							}
-						}else{
-							result = false ;
-						}
-					}else{
+                                result = false ;
+                            }
+                        }else{
+                            result = false ;
+                        }
+                    }else{
                         creer_sx_erreur(TYPEEXPECTED, tokenattribute.line);
-						result = false ;
-					}
-				}else{
-					result = false ;
-				}
-			}else{
+                        result = false ;
+                    }
+                }else{
+                    result = false ;
+                }
+            }else{
                 creer_sx_erreur(COLONEXPECTED, tokenattribute.line);
-				result = false ;
-			}
-		}else{
-			result = false ;
-		}
-	}else{
-        creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
-		result = false ;
-	}
+                result = false ;
+            }
+        }else{
+            result = false ;
+        }
+    }else{
+        result = false ;
+    }
 
     if (debug) printf("out of decl()\n");
-	return result ;
+    return result ;
 }
 
 
@@ -201,147 +200,147 @@ boolean _decl(){
 // Follows (character|string|integer|float|boolean|natural|positive)
 // First (constant)
 boolean _modifier(){
-	boolean result = false;
+    boolean result = false;
     if (debug) printf("modifier()\n");
 
-	if (token == CHARACTER){
+    if (token == CHARACTER){
         follow_token = true;
-		result = true ;
-	} 
-	else if (token == STRING){
+        result = true ;
+    } 
+    else if (token == STRING){
         follow_token = true;
-		result = true ;
-	}
-	else if (token == INTEGER){
+        result = true ;
+    }
+    else if (token == INTEGER){
         follow_token = true;
-		result = true ;
-	}
-	else if (token == FLOAT){
+        result = true ;
+    }
+    else if (token == FLOAT){
         follow_token = true;
-		result = true ;
-	}
-	else if (token == BOOLEAN){
+        result = true ;
+    }
+    else if (token == BOOLEAN){
         follow_token = true;
-		result = true ;
-	}
-	else if (token == NATURAL){
+        result = true ;
+    }
+    else if (token == NATURAL){
         follow_token = true;
-		result = true ;
-	}
-	else if (token == POSITIVE){
+        result = true ;
+    }
+    else if (token == POSITIVE){
         follow_token = true;
-		result = true ;
-	}
-	else if (token == CONSTANT){
-		result = true ;
-	}
-	else {
-		result = false ;
-	}
+        result = true ;
+    }
+    else if (token == CONSTANT){
+        result = true ;
+    }
+    else {
+        result = false ;
+    }
 
     if (debug) printf("out of modifier()\n");
-	return result ;
+    return result ;
 }
 
 //LIST_IDF : , idf LIST_IDF | epsilon
 // Follows (':')
 // first (',')
 boolean _list_idf(){
-	boolean result = false;
+    boolean result = false;
     if (debug) printf("list_idf()\n");
 
-	if (token == COLON){
+    if (token == COLON){
         follow_token = true;
-		result = true ;
-	} 
-	else if (token == COMMA){
-		token =_read_token();
-		if (token == IDF){
+        result = true ;
+    } 
+    else if (token == COMMA){
+        token =_read_token();
+        if (token == IDF){
             if (debug) printf("VAR{%s}",varattribute[NBRMAXIDF].name);
-			token = _read_token();
-			if (_list_idf()){
-				result = true ;
-			}else{
-				result = false ;
-			}
-		}else{
+            token = _read_token();
+            if (_list_idf()){
+                result = true ;
+            }else{
+                result = false ;
+            }
+        }else{
             creer_sx_erreur(IDFEXPECTED, tokenattribute.line);
-			result = false ;
-		}
-	}
-	else {
-		result = false ;
-	}
+            result = false ;
+        }
+    }
+    else {
+        result = false ;
+    }
 
     if (debug) printf("out of list_idf()\n");
-	return result ;
+    return result ;
 }
 
 //ADD_ASSIGNMENT : ASSIGNMENT | epsilon
 // Follows (';')
 // First (':=')
 boolean _add_assignment(){
-	boolean result = false ;
+    boolean result = false ;
     if (debug) printf("add_assignment()\n");
 
-	if (token == SEMI_COLON){
+    if (token == SEMI_COLON){
         for(int i = 0; i<NBRMAXIDF; i++){
             varattribute[i].initialisation = false;
         }
         follow_token = true;
-		result = true ;
-	}
-	else if (_assignment()){
-		result = true ;
-	}
-	else {
-		result = false ;
-	}
+        result = true ;
+    }
+    else if (_assignment()){
+        result = true ;
+    }
+    else {
+        result = false ;
+    }
 
     if (debug) printf("out of add_assignment()\n");
-	return result ;
+    return result ;
 }
 
 
 //TYPE : character | String | float | integer | boolean | natural | positive
 boolean _type(){
-	boolean result = false ;
+    boolean result = false ;
     if (debug) printf("type()\n");
 
-	if (token == CHARACTER){
+    if (token == CHARACTER){
         typeattribute.typename = Character;
-		result = true ;
-	} 
-	else if (token == STRING){
+        result = true ;
+    } 
+    else if (token == STRING){
         typeattribute.typename = String;
-		result = true ;
-	}
-	else if (token == INTEGER){
+        result = true ;
+    }
+    else if (token == INTEGER){
         typeattribute.typename = Integer;
-		result = true ;
-	}
-	else if (token == FLOAT){
+        result = true ;
+    }
+    else if (token == FLOAT){
         typeattribute.typename = Float;
-		result = true ;
-	}
-	else if (token == BOOLEAN){
+        result = true ;
+    }
+    else if (token == BOOLEAN){
         typeattribute.typename = Boolean;
-		result = true ;
-	}
-	else if (token == NATURAL){
+        result = true ;
+    }
+    else if (token == NATURAL){
         typeattribute.typename = NATURAL;
-		result = true ;
-	}
-	else if (token == POSITIVE){
+        result = true ;
+    }
+    else if (token == POSITIVE){
         typeattribute.typename = Positive;
-		result = true ;
-	}
-	else {
-		result = false ;
-	}
+        result = true ;
+    }
+    else {
+        result = false ;
+    }
 
     if (debug) printf("out of type()\n");
-	return result ;
+    return result ;
 }
 
 
@@ -349,27 +348,27 @@ boolean _type(){
 // Follows ('beg')
 // First ('idf')
 boolean _list_decl(){
-	boolean result = false;
+    boolean result = false;
     if (debug) printf("list_decl()\n");
 
-	if (token == BEG){
+    if (token == BEG){
         follow_token = true;
-		result = true ;
-	}else if (_decl()){
-		token =_read_token();
-		if (_list_decl()){
-			result = true ;
-		}else{
-			result = false ;
-		}
-	}else {
-		result = false ;
-	}
+        result = true ;
+    }else if (_decl()){
+        token =_read_token();
+        if (_list_decl()){
+            result = true ;
+        }else{
+            result = false ;
+        }
+    }else {
+        result = false ;
+    }
     
     afficherTS();
     
     if (debug) printf("out of list_decl()\n");
-	return result ;
+    return result ;
 }
 
 //LOOP: LOOP_TYPE 'end' 'loop' ';'
@@ -454,7 +453,6 @@ boolean _while_loop(){
         }
     }
     else{
-        creer_sx_erreur(WHILEEXPECTED, tokenattribute.line);
         result = false ;
     }
     if (debug) printf("out of while_loop()\n");
@@ -473,7 +471,7 @@ boolean _for_loop(){
             if (token == IN){
                 token = _read_token();
                 if (_index_type()){
-            		token = _read_token();
+                    token = _read_token();
                     if(_loop_statement()){
                         result = true ;
                     }
@@ -497,7 +495,6 @@ boolean _for_loop(){
         }
     }
     else{
-        creer_sx_erreur(FOREXPECTED, tokenattribute.line);
         result = false ;
     }
     if (debug) printf("out of for_loop()\n");
@@ -506,16 +503,16 @@ boolean _for_loop(){
 
 //INDEX_TYPE: integer range inumber .. inumber | inumber .. inumber | idf ' range
 boolean _index_type(){
-	boolean result = false ;
+    boolean result = false ;
     if (debug) printf("index_type()\n");
-	if (token == INTEGER){
+    if (token == INTEGER){
         token = _read_token();
         if (token == RANGE){
             token = _read_token();
             if (token == INUMBER){
                 token = _read_token();
                 if (token == INTERVAL){
-            		token = _read_token();
+                    token = _read_token();
                     if(token == INUMBER){
                         result = true ;
                     }
@@ -538,7 +535,7 @@ boolean _index_type(){
     else if (token == INUMBER){
         token = _read_token();
         if (token == INTERVAL){
-    		token = _read_token();
+            token = _read_token();
             if(token == INUMBER){
                 result = true ;
             }
@@ -553,7 +550,7 @@ boolean _index_type(){
     else  if (token == IDF){
         token = _read_token();
         if (token == APOSTROPHE){
-    		token = _read_token();
+            token = _read_token();
             if(token == RANGE){
                 result = true ;
             }
@@ -566,7 +563,7 @@ boolean _index_type(){
         }
     }
     else {
-    	result = false ;
+        result = false ;
     }
     if (debug) printf("out of index_type()\n");
     return result ;
@@ -578,22 +575,21 @@ boolean _other_loop(){
     boolean result = false ;
     if (debug) printf("other_loop()\n");
     if (token == LOOP){
-    	token = _read_token();
-    	if(_extra_statement()){
-    		token = _read_token();
-	        if(_loop_condition()){
-	            result = true ;
-	        }
-	        else{
-	            result = false ;
-	        }
-	    }
-	    else{
-	        result = false ;
-	    }
+        token = _read_token();
+        if(_extra_statement()){
+            token = _read_token();
+            if(_loop_condition()){
+                result = true ;
+            }
+            else{
+                result = false ;
+            }
+        }
+        else{
+            result = false ;
+        }
     }else{
-        creer_sx_erreur(LOOPEXPECTED, tokenattribute.line);
-    	result = false ;
+        result = false ;
     }
     if (debug) printf("out of other_loop()\n");
     return result;
@@ -606,7 +602,7 @@ boolean _loop_condition(){
     boolean result = false ;
     if (debug) printf("loop_condition()\n");
     if (token == END){
-    	follow_token = true;
+        follow_token = true;
         result = true;
     }
     else if(token == EXIT){
@@ -616,12 +612,12 @@ boolean _loop_condition(){
             if(_global_cond()){
                 token = _read_token();
                 if(token == SEMI_COLON){
-            		token = _read_token();
+                    token = _read_token();
                     if(_extra_statement()){
                         result = true ;
                     }
                     else {
-                    	result = false ;
+                        result = false ;
                     }
                 }else {
                     creer_sx_erreur(SEMICOLONEXPECTED, tokenattribute.line);
@@ -665,7 +661,7 @@ boolean _extra_statement(){
     }
     if (debug) printf("out of extra_statement()\n");
     return result;
-}	
+}   
 //LOOP_STATEMENT: loop LIST_INST
 boolean _loop_statement(){
     boolean result = false;
@@ -680,7 +676,6 @@ boolean _loop_statement(){
         }
     }
     else{
-        creer_sx_erreur(LOOPEXPECTED, tokenattribute.line);
         result = false ;
     }
     if (debug) printf("out of loop_statement()\n");
@@ -726,7 +721,7 @@ boolean _addsub(AST *past){
         }
     }else{
         // leftAssociativity == false
-        // produit un arbre dégénéré droit (associativité droite aulieu de gauche)	
+        // produit un arbre dégénéré droit (associativité droite aulieu de gauche)  
         AST *past1 = (AST *) malloc(sizeof(AST));
         AST *past2 = (AST *) malloc(sizeof(AST));
 
@@ -742,7 +737,7 @@ boolean _addsub(AST *past){
                             *past = creer_noeud_operation(op, *past1, arbre_droit(*past2), type(*past1), tokenattribute.line); // 1ere inférence de type d'arbre arithmétique
                         } else{ 
                             *past = creer_noeud_operation(op, *past1, arbre_droit(*past2), Float, tokenattribute.line); // casting implicite Int[+-*/]Double ou Double[+-*/]Int ==> Double
-                        }		
+                        }       
                     //}
                 }else *past = *past1;
                 result = true;
@@ -762,52 +757,52 @@ boolean _addsubaux(AST *past){
    if (debug) printf("addsubaux()\n");
 
    if (leftAssociativity == true){
-	// reçoit un arbre [past] en paramètre
-	// crée un nouvel arbre [newpast] dont il place la racine [+ ou -], place [past] à sa gauche avec un arbre droit NULL
-	// le repasse à ADDSUB en paramètre
+    // reçoit un arbre [past] en paramètre
+    // crée un nouvel arbre [newpast] dont il place la racine [+ ou -], place [past] à sa gauche avec un arbre droit NULL
+    // le repasse à ADDSUB en paramètre
 
-	if ( (token == SEMI_COLON) || (token == PCLOSE) || (token == THEN) || (token == LOOP)){
-		follow_token = true;
-		result = true;
-	}else if (token == PLUS) {
-			token = _read_token();
-			*past = creer_noeud_operation('+', *past, NULL, type(*past), tokenattribute.line); // 2eme inférence de type d'arbre arithmétique
-			if (_addsub(past) == true){
-				result = true;
-			}else result = false;
-	} else if (token == MINUS) {
-			token = _read_token();
-			*past = creer_noeud_operation('-', *past, NULL, type(*past), tokenattribute.line); // 2eme inférence de type d'arbre arithmétique
-			if (_addsub(past) == true){
-				result = true;
-			}else result = false;
-	} else {result = false; /* creer_sx_erreur(AddorsubExpected, tokenattribute.line); */}
-	// NE PAS GERER LES ERREURS DES FOLLOWS  (ici (token == PVIRG) || (token == PCLOSE) ) DANS LES NULLABLES CAR DECONNECTES DE LEUR CONTEXTE D'APPEL (LE FOLLOW ET l'UNION DES POSSIBILITES ==> MESSAGES ERREURS TROP VAGUES)) MAIS LES GERER DANS LES APPELANTS DES NULLABLES PLUS CONTEXTUALISES !!
+    if ( (token == SEMI_COLON) || (token == PCLOSE) || (token == THEN) || (token == LOOP)){
+        follow_token = true;
+        result = true;
+    }else if (token == PLUS) {
+            token = _read_token();
+            *past = creer_noeud_operation('+', *past, NULL, type(*past), tokenattribute.line); // 2eme inférence de type d'arbre arithmétique
+            if (_addsub(past) == true){
+                result = true;
+            }else result = false;
+    } else if (token == MINUS) {
+            token = _read_token();
+            *past = creer_noeud_operation('-', *past, NULL, type(*past), tokenattribute.line); // 2eme inférence de type d'arbre arithmétique
+            if (_addsub(past) == true){
+                result = true;
+            }else result = false;
+    } else {result = false; /* creer_sx_erreur(AddorsubExpected, tokenattribute.line); */}
+    // NE PAS GERER LES ERREURS DES FOLLOWS  (ici (token == PVIRG) || (token == PCLOSE) ) DANS LES NULLABLES CAR DECONNECTES DE LEUR CONTEXTE D'APPEL (LE FOLLOW ET l'UNION DES POSSIBILITES ==> MESSAGES ERREURS TROP VAGUES)) MAIS LES GERER DANS LES APPELANTS DES NULLABLES PLUS CONTEXTUALISES !!
 
    }else{ //(leftAssociativity == false){
-   	// produit un arbre dégénéré droit (associativité droite aulieu de gauche)
-	*past = NULL;
+    // produit un arbre dégénéré droit (associativité droite aulieu de gauche)
+    *past = NULL;
 
-	AST *past1 = (AST *) malloc(sizeof(AST));
+    AST *past1 = (AST *) malloc(sizeof(AST));
 
-	if ( (token == SEMI_COLON) || (token == PCLOSE) || (token == THEN) || (token == LOOP) ){
-		follow_token = true;
-		result = true;
-	}else if (token == PLUS) {
-			token = _read_token();
-			if (_addsub(past1) == true){
-				if (*past1 != NULL)
-					*past = creer_noeud_operation('+', NULL, *past1, type(*past1), tokenattribute.line); // 2eme inférence de type d'arbre arithmétique
-				result = true;
-			}else result = false;
-	} else if (token == MINUS) {
-			token = _read_token();
-			if (_addsub(past1) == true){
-				if (*past1 != NULL)
-					*past = creer_noeud_operation('-', NULL, *past1, type(*past1), tokenattribute.line); //3eme inférence de type d'arbre arithmétique
-				result = true;
-			}else result = false;
-	} else result = false;
+    if ( (token == SEMI_COLON) || (token == PCLOSE) || (token == THEN) || (token == LOOP) ){
+        follow_token = true;
+        result = true;
+    }else if (token == PLUS) {
+            token = _read_token();
+            if (_addsub(past1) == true){
+                if (*past1 != NULL)
+                    *past = creer_noeud_operation('+', NULL, *past1, type(*past1), tokenattribute.line); // 2eme inférence de type d'arbre arithmétique
+                result = true;
+            }else result = false;
+    } else if (token == MINUS) {
+            token = _read_token();
+            if (_addsub(past1) == true){
+                if (*past1 != NULL)
+                    *past = creer_noeud_operation('-', NULL, *past1, type(*past1), tokenattribute.line); //3eme inférence de type d'arbre arithmétique
+                result = true;
+            }else result = false;
+    } else result = false;
    }
  if (debug) printf("out of addsubaux()\n");
  return result;
@@ -819,79 +814,79 @@ boolean _multdiv(AST *past){
    if (debug) printf("multdiv()\n");
 
    if (leftAssociativity == true){
-	// reçoit un arbre [past] en paramètre avec un arbre droit NULL
-	// lui installe l'arbre reçu de Aux comme arbre droit
-	// le repasse à Multdivaux en paramètre
+    // reçoit un arbre [past] en paramètre avec un arbre droit NULL
+    // lui installe l'arbre reçu de Aux comme arbre droit
+    // le repasse à Multdivaux en paramètre
 
-	AST *past1 = (AST *) malloc(sizeof(AST));
-	AST *past2 = (AST *) malloc(sizeof(AST));
+    AST *past1 = (AST *) malloc(sizeof(AST));
+    AST *past2 = (AST *) malloc(sizeof(AST));
 
         // NEW 3 : past a un arbre droit NULL
-	(*past1) = (AST) malloc (sizeof(struct Exp));
+    (*past1) = (AST) malloc (sizeof(struct Exp));
 
-	if (_aux(past1)){
-		token = _read_token();
+    if (_aux(past1)){
+        token = _read_token();
 
-		if ((*past)->noeud.op.expression_gauche == NULL) (*past) = *past1; // initialisation par le première feuille gauche.
-		else (*past)->noeud.op.expression_droite = *past1;
+        if ((*past)->noeud.op.expression_gauche == NULL) (*past) = *past1; // initialisation par le première feuille gauche.
+        else (*past)->noeud.op.expression_droite = *past1;
 
-		if (_multdivaux(past) == true){
+        if (_multdivaux(past) == true){
             //printf("before if");
-				if ((arbre_droit(*past) != NULL) && (arbre_gauche(*past) != NULL)) {
+                if ((arbre_droit(*past) != NULL) && (arbre_gauche(*past) != NULL)) {
                     //printf("after if");
-					if (type(arbre_gauche(*past)) == type(arbre_droit(*past))){ // Int/Int ou Double/Double
-						(*past)->typename = type(arbre_gauche(*past));
-					}else {
-						//(*past)->typename = Double;
+                    if (type(arbre_gauche(*past)) == type(arbre_droit(*past))){ // Int/Int ou Double/Double
+                        (*past)->typename = type(arbre_gauche(*past));
+                    }else {
+                        //(*past)->typename = Double;
                         printf("Semantic Error different type ");
-						if (debug) {printf("<multdivICI>\n");afficher_infixe_arbre(*past);printf("\n");}
-					}
-				}else {
+                        if (debug) {printf("<multdivICI>\n");afficher_infixe_arbre(*past);printf("\n");}
+                    }
+                }else {
                     //printf("before past ");
                     (*past) = *past1;
                     //printf("after past ");
                 } // ??
-			result = true;
-		}else result = false;
-	}else result = false;
-	/*
-			aux()
-			out of aux()
-			multdivaux()
-				multdiv()
-					aux()
-					out of aux()
-					multdivaux()
-					out of multdivaux()
-				out of multdiv()
-			out of multdivaux()
+            result = true;
+        }else result = false;
+    }else result = false;
+    /*
+            aux()
+            out of aux()
+            multdivaux()
+                multdiv()
+                    aux()
+                    out of aux()
+                    multdivaux()
+                    out of multdivaux()
+                out of multdiv()
+            out of multdivaux()
 
-	*/
+    */
 
     }else{// (leftAssociativity == false){
-	// produit un arbre dégénéré droit (associativité droite aulieu de gauche)
-	*past = NULL;
+    // produit un arbre dégénéré droit (associativité droite aulieu de gauche)
+    *past = NULL;
 
-	AST *past1 = (AST *) malloc(sizeof(AST));
-	AST *past2 = (AST *) malloc(sizeof(AST));
+    AST *past1 = (AST *) malloc(sizeof(AST));
+    AST *past2 = (AST *) malloc(sizeof(AST));
 
-	if (_aux(past1)){
-		token = _read_token();
-		if (_multdivaux(past2) == true){
-			if ( (*past1 != NULL) && (*past2 != NULL) ){
-				if (debug) printf("( (*past1 != NULL) && (*past2 != NULL) )\n");
-				char op = ((top(*past2)==plus)?'+':((top(*past2)==moins)?'-':((top(*past2)==mult)?'*':'/')));
-				if (type(*past1) == type(arbre_droit(*past2))){ //Int/Int ou Double/Double
-					*past = creer_noeud_operation(op, *past1, arbre_droit(*past2), type(*past1), tokenattribute.line); // 4eme inférence de type
-				} else {
-					*past = creer_noeud_operation(op, *past1, arbre_droit(*past2), Float, tokenattribute.line); // casting implicite Int[+-*/]Double ou Double[+-*/]Int ==> Double
-				}
-			}else {
-				*past = *past1;
-			}
-			result = true;
-		}else result = false;
-	}else result = false;
+    if (_aux(past1)){
+        token = _read_token();
+        if (_multdivaux(past2) == true){
+            if ( (*past1 != NULL) && (*past2 != NULL) ){
+                if (debug) printf("( (*past1 != NULL) && (*past2 != NULL) )\n");
+                char op = ((top(*past2)==plus)?'+':((top(*past2)==moins)?'-':((top(*past2)==mult)?'*':'/')));
+                if (type(*past1) == type(arbre_droit(*past2))){ //Int/Int ou Double/Double
+                    *past = creer_noeud_operation(op, *past1, arbre_droit(*past2), type(*past1), tokenattribute.line); // 4eme inférence de type
+                } else {
+                    *past = creer_noeud_operation(op, *past1, arbre_droit(*past2), Float, tokenattribute.line); // casting implicite Int[+-*/]Double ou Double[+-*/]Int ==> Double
+                }
+            }else {
+                *past = *past1;
+            }
+            result = true;
+        }else result = false;
+    }else result = false;
     }
     if (debug) printf("out of multdiv()\n");
     return result;
@@ -902,55 +897,55 @@ boolean _multdiv(AST *past){
 // Follows('-', '+', ')', then, 'loop', ';')
 // First(MULTDIVAUX) = { '*', '/' }
 boolean _multdivaux(AST *past){
-	boolean result;
-	if (debug) printf("multdivaux()\n");
+    boolean result;
+    if (debug) printf("multdivaux()\n");
 
    if (leftAssociativity == true){
-	// reçoit un arbre [past] en paramètre
-	// crée un nouvel arbre [newpast] dont il place la racine [/ ou *], place [past] à sa gauche avec un arbre droit NULL
-	// le repasse à MultDiv en paramètre
-	
-	if ( (token == PLUS) || (token == MINUS) || (token == SEMI_COLON) || (token == PCLOSE) ){
-		follow_token = true;
-		result = true;
-	}else if (token == MULT) {
-			token = _read_token();
-			*past = creer_noeud_operation('*', *past, NULL, type(*past), tokenattribute.line); // NEW 7 : 2eme inférence de type d'arbre arithmétique
-			if (_multdiv(past)){
-				result = true;
-			}else result = false;
-	} else if (token == DIV) {
-			token = _read_token();
-			*past = creer_noeud_operation('/', *past, NULL, type(*past), tokenattribute.line); // NEW 8 : 2eme inférence de type d'arbre arithmétique
-			if (_multdiv(past)){
-				result = true;			
-			}else result = false;
-	} else {result = false;/* creer_sx_erreur(MultordivExpected, tokenattribute.line);*/} // NE PAS GERER LES ERREURS DES FOLLOWS  (ici (token == PLUS) || (token == MINUS) || (token == PVIRG) || (token == PCLOSE) ) DANS LES NULLABLES CAR DECONNECTES DE LEUR CONTEXTE D'APPEL (LE FOLLOW ET l'UNION DES POSSIBILITES ==> MESSAGES ERREURS TROP VAGUES)) creer_sx_erreur(MultordivorplusorminusorpvirgorpcloseExpected, yylineno);
+    // reçoit un arbre [past] en paramètre
+    // crée un nouvel arbre [newpast] dont il place la racine [/ ou *], place [past] à sa gauche avec un arbre droit NULL
+    // le repasse à MultDiv en paramètre
+    
+    if ( (token == PLUS) || (token == MINUS) || (token == SEMI_COLON) || (token == PCLOSE) ){
+        follow_token = true;
+        result = true;
+    }else if (token == MULT) {
+            token = _read_token();
+            *past = creer_noeud_operation('*', *past, NULL, type(*past), tokenattribute.line); // NEW 7 : 2eme inférence de type d'arbre arithmétique
+            if (_multdiv(past)){
+                result = true;
+            }else result = false;
+    } else if (token == DIV) {
+            token = _read_token();
+            *past = creer_noeud_operation('/', *past, NULL, type(*past), tokenattribute.line); // NEW 8 : 2eme inférence de type d'arbre arithmétique
+            if (_multdiv(past)){
+                result = true;          
+            }else result = false;
+    } else {result = false;/* creer_sx_erreur(MultordivExpected, tokenattribute.line);*/} // NE PAS GERER LES ERREURS DES FOLLOWS  (ici (token == PLUS) || (token == MINUS) || (token == PVIRG) || (token == PCLOSE) ) DANS LES NULLABLES CAR DECONNECTES DE LEUR CONTEXTE D'APPEL (LE FOLLOW ET l'UNION DES POSSIBILITES ==> MESSAGES ERREURS TROP VAGUES)) creer_sx_erreur(MultordivorplusorminusorpvirgorpcloseExpected, yylineno);
 
-   }else{ //(leftAssociativity == false){	
-	// produit un arbre dégénéré droit (associativité droite aulieu de gauche)
-	*past = NULL;
+   }else{ //(leftAssociativity == false){   
+    // produit un arbre dégénéré droit (associativité droite aulieu de gauche)
+    *past = NULL;
 
-	AST *past1 = (AST *) malloc(sizeof(AST));
-	
-	if ( (token == PLUS) || (token == MINUS) || (token == SEMI_COLON) || (token == PCLOSE) ){
-		follow_token = true;
-		result = true;
-	}else if (token == MULT) {
-			token = _read_token();
-			if (_multdiv(past1)){
-				if ( (*past1 != NULL) )
-					*past = creer_noeud_operation('*', NULL, *past1, type(*past1), tokenattribute.line); // 5eme inférence de type d'arbre arithmétique
-				result = true;
-			}else result = false;
-	} else if (token == DIV) {
-			token = _read_token();
-			if (_multdiv(past1)){
-				if ( (*past1 != NULL) )
-					*past = creer_noeud_operation('/', NULL, *past1, type(*past1), tokenattribute.line); //6eme inférence de type d'arbre arithmétique
-				result = true;			
-			}else result = false;
-	} else result = false;
+    AST *past1 = (AST *) malloc(sizeof(AST));
+    
+    if ( (token == PLUS) || (token == MINUS) || (token == SEMI_COLON) || (token == PCLOSE) ){
+        follow_token = true;
+        result = true;
+    }else if (token == MULT) {
+            token = _read_token();
+            if (_multdiv(past1)){
+                if ( (*past1 != NULL) )
+                    *past = creer_noeud_operation('*', NULL, *past1, type(*past1), tokenattribute.line); // 5eme inférence de type d'arbre arithmétique
+                result = true;
+            }else result = false;
+    } else if (token == DIV) {
+            token = _read_token();
+            if (_multdiv(past1)){
+                if ( (*past1 != NULL) )
+                    *past = creer_noeud_operation('/', NULL, *past1, type(*past1), tokenattribute.line); //6eme inférence de type d'arbre arithmétique
+                result = true;          
+            }else result = false;
+    } else result = false;
    }
 
    if (debug) printf("out of multdivaux()\n");
@@ -959,53 +954,53 @@ boolean _multdivaux(AST *past){
 
 //AUX : idf | inumber | fnumber | ( ADDSUB )
 boolean _aux(AST *past){
-	boolean result;
+    boolean result;
 
 
-	if (debug) printf("aux()\n");
+    if (debug) printf("aux()\n");
 
-	if (leftAssociativity == false){ *past = NULL; }
+    if (leftAssociativity == false){ *past = NULL; }
 
-	if  (token == IDF) {
+    if  (token == IDF) {
         //les test pour sm error
-		 if (est_definie(rangvar) == false){
-			*past = creer_feuille_idf(name(rangvar), typevar(rangvar)); // On ne peut pas donc avoir un AST de type Bool (meme si l'IDF est un Bool)
-		}else{
-			// l'IDF est Int ou Double et est initialisee 
-			*past = creer_feuille_idf(name(rangvar), typevar(rangvar)); // On ne peut pas donc avoir un AST de type Bool (meme si l'IDF est un Bool)
-			//utiliser( rangvar ); //sert à l'optimisateur
-		}
-		result = true;
-	} else if (token == INUMBER) {
-		*past = creer_feuille_nombre(constattribute.valinit, Integer);
-		result = true;
-	} else if (token == FNUMBER) {
-		*past = creer_feuille_nombre(constattribute.valinit, Float);
-		result = true;
-	}  else if (token == POPEN) {
-		token = _read_token();
-		if (_addsub(past)){
-			token = _read_token();
-			if (token == PCLOSE){
-				result = true;
-			}else {
-				result = false;
-				//creer_sx_erreur(PcloseExpected, tokenattribute.line);
-			}
-		}else result = false;
-	} else  {result = false;
+         if (est_definie(rangvar) == false){
+            *past = creer_feuille_idf(name(rangvar), typevar(rangvar)); // On ne peut pas donc avoir un AST de type Bool (meme si l'IDF est un Bool)
+        }else{
+            // l'IDF est Int ou Double et est initialisee 
+            *past = creer_feuille_idf(name(rangvar), typevar(rangvar)); // On ne peut pas donc avoir un AST de type Bool (meme si l'IDF est un Bool)
+            //utiliser( rangvar ); //sert à l'optimisateur
+        }
+        result = true;
+    } else if (token == INUMBER) {
+        *past = creer_feuille_nombre(constattribute.valinit, Integer);
+        result = true;
+    } else if (token == FNUMBER) {
+        *past = creer_feuille_nombre(constattribute.valinit, Float);
+        result = true;
+    }  else if (token == POPEN) {
+        token = _read_token();
+        if (_addsub(past)){
+            token = _read_token();
+            if (token == PCLOSE){
+                result = true;
+            }else {
+                result = false;
+                //creer_sx_erreur(PcloseExpected, tokenattribute.line);
+            }
+        }else result = false;
+    } else  {result = false;
     creer_sx_erreur(VALUEEXPECTED, tokenattribute.line);}
 
 
-	if (debug) printf("out of aux()\n");
-	return result;
+    if (debug) printf("out of aux()\n");
+    return result;
 }
 
 //CASE_STATEMENT : case idf is CASE_BODY 'when_others' '=>' LIST_INST end case ;
 // First (case)
 boolean _case_statement(){
     boolean result;
-	if (debug) printf("case_statement()\n");
+    if (debug) printf("case_statement()\n");
 
     if(token == CASE){
         token = _read_token();
@@ -1057,19 +1052,18 @@ boolean _case_statement(){
             result = false;
         }
     }else{
-        creer_sx_erreur(CASEEXPECTED, tokenattribute.line);
         result = false;
     }
 
     if (debug) printf("out of case_statement()\n");
-	return result;
+    return result;
 }
 
 //CASE_BODY :  when VALUE '=>' LIST_INST CASE_BODY | epsilon
 // Follows ('when_others')
 boolean _case_body(){
     boolean result;
-	if (debug) printf("case_statement()\n");
+    if (debug) printf("case_statement()\n");
 
     if(token == WHEN_OTHERS){
         follow_token = true;
@@ -1103,12 +1097,12 @@ boolean _case_body(){
     }
 
     if (debug) printf("out of case_statement()\n");
-	return result;
+    return result;
 }
 //CONDITION_BOOL : true | false
 boolean _condition_bool(){
     boolean result;
-	if (debug) printf("condition_bool()\n");
+    if (debug) printf("condition_bool()\n");
 
     if(token == TRUE){
         result = true;
@@ -1119,7 +1113,7 @@ boolean _condition_bool(){
     }
 
     if (debug) printf("out of condition_bool()\n");
-	return result;
+    return result;
 }
 //CONDITION_ARITH : VALUE LOGICAL_OPERATOR VALUE
 
@@ -1144,7 +1138,7 @@ boolean _condition_arith(){
     }
 
     if (debug) printf("out of condition_arith()\n");
-	return result;
+    return result;
 }
 //OPERATOR_ARITH : '=' | '/=' | '<' | '>' | '<=' | '>='
 boolean _operator_arith(){
@@ -1168,7 +1162,7 @@ boolean _operator_arith(){
     }
 
     if (debug) printf("out of operator_arith()\n");
-	return result;
+    return result;
 }
 //COND : CONDITION_BOOL | CONDITION_ARITH
 boolean _cond(){
@@ -1184,7 +1178,7 @@ boolean _cond(){
     }
 
     if (debug) printf("cond()\n");
-	return result;
+    return result;
 }
 //LIST_COND : COND LIST_COND_AUX
 boolean _list_cond(){
@@ -1202,7 +1196,7 @@ boolean _list_cond(){
     }
 
     if (debug) printf("out of list_cond()\n");
-	return result;
+    return result;
 }
 
 //LIST_COND_AUX : OR_LIST_COND_AUX | AND_LIST_COND_AUX | XOR_LIST_COND_AUX
@@ -1221,7 +1215,7 @@ boolean _list_cond_aux(){
     }
 
     if (debug) printf("out of list_cond_aux()\n");
-	return result;
+    return result;
 }
 //OR_LIST_COND_AUX : 'or' COND OR_LIST_COND_AUX | epsilon
 // Follows ( ')', then, 'loop', ';' )
@@ -1258,7 +1252,7 @@ boolean _or_list_cond_aux(){
     }
 
     if (debug) printf("out of or_list_cond_aux()\n");
-	return result;
+    return result;
 }
 //AND_LIST_COND_AUX : 'and' COND AND_LIST_COND_AUX | epsilon
 // Follows ( ')', then, 'loop', ';' )
@@ -1295,7 +1289,7 @@ boolean _and_list_cond_aux(){
     }
 
     if (debug) printf("out of and_list_cond_aux()\n");
-	return result;
+    return result;
 }
 //XOR_LIST_COND_AUX : 'xor' COND XOR_LIST_COND_AUX | epsilon
 // Follows ( ')', then, 'loop', ';' )
@@ -1332,7 +1326,7 @@ boolean _xor_list_cond_aux(){
     }
 
     if (debug) printf("out of xor_list_cond_aux()\n");
-	return result;
+    return result;
 }
 //GLOBAL_COND : '(' LIST_COND ')' GLOBAL_COND_AUX | LIST_COND
 boolean _global_cond(){
@@ -1363,7 +1357,7 @@ boolean _global_cond(){
     }
 
     if (debug) printf("out of global_cond()\n");
-	return result;
+    return result;
 }
 //GLOBAL_COND_AUX : OR_GLOBAL_COND_AUX | AND_GLOBAL_COND_AUX | XOR_GLOBAL_COND_AUX
 boolean _global_cond_aux(){
@@ -1381,38 +1375,38 @@ boolean _global_cond_aux(){
     }
 
     if (debug) printf("out of global_cond_aux()\n");
-	return result;
+    return result;
 }
 //OR_GLOBAL_COND_AUX : 'or' '(' LIST_COND ')' OR_GLOBAL_COND_AUX | epsilon
 // Follows (then, 'loop', ';')
 boolean _or_global_cond_aux(){
-	boolean result = false ;
-	if ( token == THEN ){
-		return true ;
-	}
-	else if ( token == LOOP ){
-		return true ;
-	}
-	else if ( token == SEMI_COLON ){
-		return true ;
-	}
-	else if(token == OR){
-        	token = _read_token();
+    boolean result = false ;
+    if ( token == THEN ){
+        return true ;
+    }
+    else if ( token == LOOP ){
+        return true ;
+    }
+    else if ( token == SEMI_COLON ){
+        return true ;
+    }
+    else if(token == OR){
+            token = _read_token();
             if(token == POPEN){
                 token = _read_token();
                 if(_list_cond()){
-            		token = _read_token();
+                    token = _read_token();
                     if(token == PCLOSE){
-                    	token = _read_token();
+                        token = _read_token();
                         if(_or_global_cond_aux()){
-	                        result = true ;
-	                    }
-	                    else {
-	                    	result = false ;
-	                    }
+                            result = true ;
+                        }
+                        else {
+                            result = false ;
+                        }
                     }
                     else {
-                    	result = false ;
+                        result = false ;
                     }
                 }else {
                     result = false ;
@@ -1430,93 +1424,93 @@ boolean _or_global_cond_aux(){
 //AND_GLOBAL_COND_AUX : 'and' '(' LIST_COND ')' AND_GLOBAL_COND_AUX | epsilon
 // Follows (then, 'loop', ';')
 boolean _and_global_cond_aux(){
-	boolean result = false ;
-	if ( token == THEN ){
-		return true ;
-	}
-	else if ( token == LOOP ){
-		return true ;
-	}
-	else if ( token == SEMI_COLON ){
-		return true ;
-	}
-	else if(token == AND){
-	    	token = _read_token();
-	        if(token == POPEN){
-	            token = _read_token();
-	            if(_list_cond()){
-	        		token = _read_token();
-	                if(token == PCLOSE){
-	                	token = _read_token();
-	                    if(_and_global_cond_aux()){
-	                        result = true ;
-	                    }
-	                    else {
-	                    	result = false ;
-	                    }
-	                }
-	                else {
-	                	result = false ;
-	                }
-	            }else {
-	                result = false ;
-	            }
-	        }else {
-	            result = false ;
-	        }
-	    }
-	else {
-	    result = false ;
-	}
+    boolean result = false ;
+    if ( token == THEN ){
+        return true ;
+    }
+    else if ( token == LOOP ){
+        return true ;
+    }
+    else if ( token == SEMI_COLON ){
+        return true ;
+    }
+    else if(token == AND){
+            token = _read_token();
+            if(token == POPEN){
+                token = _read_token();
+                if(_list_cond()){
+                    token = _read_token();
+                    if(token == PCLOSE){
+                        token = _read_token();
+                        if(_and_global_cond_aux()){
+                            result = true ;
+                        }
+                        else {
+                            result = false ;
+                        }
+                    }
+                    else {
+                        result = false ;
+                    }
+                }else {
+                    result = false ;
+                }
+            }else {
+                result = false ;
+            }
+        }
+    else {
+        result = false ;
+    }
 }
 
 //XOR_GLOBAL_COND_AUX : 'xor' '(' LIST_COND ')' XOR_GLOBAL_COND_AUX | epsilon
 // Follows (then, 'loop', ';')
 boolean _xor_global_cond_aux(){
-	boolean result = false ;
-	if ( token == THEN ){
-		return true ;
-	}
-	else if ( token == LOOP ){
-		return true ;
-	}
-	else if ( token == SEMI_COLON ){
-		return true ;
-	}
-	else if(token == XOR){
-	    	token = _read_token();
-	        if(token == POPEN){
-	            token = _read_token();
-	            if(_list_cond()){
-	        		token = _read_token();
-	                if(token == PCLOSE){
-	                	token = _read_token();
-	                    if(_xor_global_cond_aux()){
-	                        result = true ;
-	                    }
-	                    else {
-	                    	result = false ;
-	                    }
-	                }
-	                else {
-	                	result = false ;
-	                }
-	            }else {
-	                result = false ;
-	            }
-	        }else {
-	            result = false ;
-	        }
-	    }
-	else {
-	    result = false ;
-	}
+    boolean result = false ;
+    if ( token == THEN ){
+        return true ;
+    }
+    else if ( token == LOOP ){
+        return true ;
+    }
+    else if ( token == SEMI_COLON ){
+        return true ;
+    }
+    else if(token == XOR){
+            token = _read_token();
+            if(token == POPEN){
+                token = _read_token();
+                if(_list_cond()){
+                    token = _read_token();
+                    if(token == PCLOSE){
+                        token = _read_token();
+                        if(_xor_global_cond_aux()){
+                            result = true ;
+                        }
+                        else {
+                            result = false ;
+                        }
+                    }
+                    else {
+                        result = false ;
+                    }
+                }else {
+                    result = false ;
+                }
+            }else {
+                result = false ;
+            }
+        }
+    else {
+        result = false ;
+    }
 }
 /*  LIST_INST : INST LIST_INST_AUX
  */
 boolean _list_inst(){
     boolean result ;
-	if (debug) printf("list_inst()\n");
+    if (debug) printf("list_inst()\n");
 
     if(_inst()){
         token = _read_token();
@@ -1530,7 +1524,7 @@ boolean _list_inst(){
     }
 
     if (debug) printf("out of list_inst()\n");
-	return result;
+    return result;
 }
 /*  LIST_INST_AUX : LIST_INST | epsilon
     Follows ('end')
@@ -1538,7 +1532,7 @@ boolean _list_inst(){
  */
 boolean _list_inst_aux(){
     boolean result ;
-	if (debug) printf("list_inst_aux()\n");
+    if (debug) printf("list_inst_aux()\n");
 
     if( token == END ){
         follow_token = true;
@@ -1549,7 +1543,7 @@ boolean _list_inst_aux(){
         result = false;
     }
     if (debug) printf("out of list_inst_aux()\n");
-	return result;
+    return result;
 }
 
 //INST : LOOP | IF_STATEMENT | CASE_STATEMENT | ASSIGNMENT_STATEMENT | PUT_STATEMENT
@@ -1568,8 +1562,11 @@ boolean _inst(){
     }else if (_put_statement()) {
         result = true;
     }
+    else{
+        result = false ;
+    }
     if (debug) printf("out of list_inst_aux()\n");
-	return result;
+    return result;
 }
 /* PUT_STATEMENT : 'put' '(' VALUE ')' ';' 
                 | 'put_line' '(' VALUE ')' ';'
@@ -1629,7 +1626,7 @@ boolean _put_statement() {
         result = false;
     }
     if (debug) printf("out of put_statement()\n");
-	return result;
+    return result;
 }
 
 /* VALUE : inumber 
@@ -1662,7 +1659,7 @@ boolean _value(){
     }
 
     if (debug) printf("out of value()\n");
-	return result;
+    return result;
 }
 
 //ASSIGNMENT_STATEMENT : idf ASSIGNMENT ;
@@ -1682,7 +1679,7 @@ boolean _assignment_statement(){
         result = false;
     }
     if (debug) printf("out of assignment_statement()\n");
-	return result;
+    return result;
 }
 
 //ASSIGNMENT : ':=' EXPRESSION
@@ -1705,7 +1702,7 @@ boolean _assignment(){
         result = false;
     }
     if (debug) printf("out of assignment()\n");
-	return result;
+    return result;
 }
 //EXPRESSION : char | cstr | true | false | ADDSUB 
 boolean _expression(){
@@ -1732,7 +1729,7 @@ boolean _expression(){
         result = false;
     }
     if (debug) printf("out of expression()\n");
-	return result;
+    return result;
 }
 /* IF_STATEMENT : 
         if GLOBAL_COND then LIST_INST ELSE_STATEMENT end if ;
@@ -1788,7 +1785,7 @@ boolean _if_statement(){
         result = false;
     }
     if (debug) printf("out of if_statement()\n");
-	return result; 
+    return result; 
 }
 
 /* ELSE_STATEMENT : else LIST_INST 
@@ -1827,7 +1824,7 @@ boolean _else_statement(){
                     result = false;
                 }
             }else{
-                creer_sx_erreur(THENEXPECTED, tokenattribute.line);
+                creer_sx_erreur(THEXPECTED, tokenattribute.line);
                 result = false;
             }
         }else{
@@ -1841,25 +1838,25 @@ boolean _else_statement(){
 }
 
 void set_idf_attributes(char *name, int line){
-	if (debug) printf("[%s]", name);
-	varattribute[NBRMAXIDF].name = (char *)malloc(sizeof(char) * strlen(name)+1);
-	strcpy(varattribute[NBRMAXIDF].name, name);
-	if (debug) printf("[%s]", varattribute[NBRMAXIDF].name);
-	varattribute[NBRMAXIDF].line = line;
+    if (debug) printf("[%s]", name);
+    varattribute[NBRMAXIDF].name = (char *)malloc(sizeof(char) * strlen(name)+1);
+    strcpy(varattribute[NBRMAXIDF].name, name);
+    if (debug) printf("[%s]", varattribute[NBRMAXIDF].name);
+    varattribute[NBRMAXIDF].line = line;
     NBRMAXIDF++;
 }
 
 void set_number_attributes(double value){
-	constattribute.valinit = value;
+    constattribute.valinit = value;
 }
 
 void set_string_attributes(char * s){
-	if (debug) printf("set_string_attributes()\n");
-	if ((debug) && (s == NULL)) printf("s NULL!!!!!!!\n"); 
+    if (debug) printf("set_string_attributes()\n");
+    if ((debug) && (s == NULL)) printf("s NULL!!!!!!!\n"); 
 
-	stringattribute.value = (char *)malloc((strlen(s)+1) * sizeof(char));
-	strcpy(stringattribute.value, s);
-	if (debug) printf("out set_string_attributes()\n");
+    stringattribute.value = (char *)malloc((strlen(s)+1) * sizeof(char));
+    strcpy(stringattribute.value, s);
+    if (debug) printf("out set_string_attributes()\n");
 }
 
 void set_Mode_Optimisation( boolean _optimisationMode ){
@@ -1867,18 +1864,18 @@ void set_Mode_Optimisation( boolean _optimisationMode ){
 }
 
 boolean get_Mode_Optimisation( ){
-	return optimisationMode;
+    return optimisationMode;
 }
 
 void set_Left_Associativity( boolean _leftAssociativity ){
-	leftAssociativity = _leftAssociativity;
+    leftAssociativity = _leftAssociativity;
 }
 
 boolean get_Left_Associativity( ){
-	return leftAssociativity;
+    return leftAssociativity;
 }
 
 
 void set_token_attributes(int line){
-	tokenattribute.line = line;
+    tokenattribute.line = line;
 }
